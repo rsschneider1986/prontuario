@@ -1,8 +1,10 @@
 package com.prontuario.dao;
 
+import com.prontuario.entity.Medicamento;
 import com.prontuario.entity.Receita;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -26,5 +28,5 @@ public class ReceitaDAO extends GenericDAO<Receita> {
         q.setParameter("pn", "%" + pacienteNome.toLowerCase() + "%");
         q.setParameter("mn", "%" + medicamentoNome.toLowerCase() + "%");
         return q.getSingleResult();
-    }
+    }   
 }

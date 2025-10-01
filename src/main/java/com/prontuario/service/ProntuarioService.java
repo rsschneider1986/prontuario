@@ -34,6 +34,11 @@ public class ProntuarioService {
 	public Paciente atualizarPaciente(Paciente p) {
 		return pacienteDAO.update(p);
 	}
+	
+	@Transactional
+	public Medicamento atualizarMedicamento(Medicamento m) {
+		return medicamentoDAO.update(m);
+	}
 
 	@Transactional
 	public void removerPaciente(Paciente p) {
@@ -55,8 +60,9 @@ public class ProntuarioService {
 
 	@Transactional
 	public void removerMedicamento(Medicamento m) {
-		medicamentoDAO.delete(m);
+		medicamentoDAO.removerMedicamento(m);
 	}
+	
 
 	public List<Medicamento> buscarMedicamentoPorNomePaged(String termo, int first, int pageSize) {
 		return medicamentoDAO.findByNomePaged(termo == null ? "" : termo, first, pageSize);
@@ -107,11 +113,15 @@ public class ProntuarioService {
 				medicamentoNome == null ? "" : medicamentoNome);
 	}
 
-	public Paciente findPacienteById(Long id) {
+	public Paciente buscarPacientePorId(Long id) {
 	    return pacienteDAO.find(id);
 	}
 
-	public Medicamento findMedicamentoById(Long id) {
+	public Medicamento buscarMedicamentoById(Long id) {
 	    return medicamentoDAO.find(id);
+	}
+	
+	public Receita buscarReceitaById(Long id) {
+	    return receitaDAO.find(id);
 	}
 }

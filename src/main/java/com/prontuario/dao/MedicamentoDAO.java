@@ -1,10 +1,12 @@
 package com.prontuario.dao;
 
-import com.prontuario.entity.Medicamento;
+import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.List;
+
+import com.prontuario.entity.Medicamento;
 
 @ApplicationScoped
 public class MedicamentoDAO extends GenericDAO<Medicamento> {
@@ -25,4 +27,19 @@ public class MedicamentoDAO extends GenericDAO<Medicamento> {
         q.setParameter("t", "%" + termo.toLowerCase() + "%");
         return q.getSingleResult();
     }
+    
+	public void removerMedicamento(Medicamento medicamento) {
+	    Long medicamentoId = medicamento.getId();
+	    
+	    // Primeiro, remove as referências nas tabelas relacionadas
+	    Query query = em.createQuery("UPDATE MedicamentoReceitado mr SET mr.medicamento = null WHERE mr.medicamento.id = :medicamentoId");
+	    query.setParameter("medicamentoId", medicamentoId);
+	    query.executeUpdate();
+	    
+	    // Agora exclui o medicamento
+	    Medicamento managed = em.find(Medicamento.class, medicamentoId);
+	    if (managed != null) {
+	        em.remove(managed);
+	    }
+	}
 }

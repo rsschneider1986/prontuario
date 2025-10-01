@@ -1,10 +1,11 @@
-package com.prontuario.controller;
+package com.prontuario.bean;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -15,6 +16,7 @@ import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 
 import com.prontuario.entity.Medicamento;
+import com.prontuario.entity.Paciente;
 import com.prontuario.service.ProntuarioService;
 
 @Named
@@ -35,6 +37,16 @@ public class MedicamentoBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
+
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String idParam = params.get("id");
+
+		if (idParam != null && !idParam.isEmpty()) {
+			medicamento = service.buscarMedicamentoById(Long.valueOf(idParam));
+		} else {
+			medicamento = new Medicamento();
+		}
+
 		lazyModel = new LazyDataModel<Medicamento>() {
 
 			private static final long serialVersionUID = 7471967528838156267L;
@@ -56,8 +68,7 @@ public class MedicamentoBean implements Serializable {
 	}
 
 	public String editar(Medicamento m) {
-		medicamento = m;
-		return "medicamentoForm.xhtml?faces-redirect=true";
+		return "medicamentoForm.xhtml?faces-redirect=true&id=" + m.getId();
 	}
 
 	@Transactional
@@ -65,7 +76,7 @@ public class MedicamentoBean implements Serializable {
 		if (medicamento.getId() == null) {
 			service.salvarMedicamento(medicamento);
 		} else {
-			service.removerMedicamento(medicamento);
+			service.atualizarMedicamento(medicamento);
 		}
 		return "medicamento.xhtml?faces-redirect=true";
 	}

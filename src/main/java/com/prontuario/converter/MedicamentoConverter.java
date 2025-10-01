@@ -16,7 +16,7 @@ public class MedicamentoConverter implements Converter<Object> {
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         if (value == null || value.trim().isEmpty()) return null;
         ProntuarioService service = CDI.current().select(ProntuarioService.class).get();
-        return service.findMedicamentoById(Long.valueOf(value));
+        return service.buscarMedicamentoById(Long.valueOf(value));
     }
 
     @Override

@@ -1,10 +1,11 @@
-package com.prontuario.controller;
+package com.prontuario.bean;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -21,6 +22,11 @@ import com.prontuario.service.ProntuarioService;
 @ViewScoped
 public class PacienteBean implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7683174074698749756L;
+
 	@Inject
 	private ProntuarioService service;
 
@@ -30,6 +36,17 @@ public class PacienteBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
+		
+		Map<String, String> params = FacesContext.getCurrentInstance()
+                .getExternalContext().getRequestParameterMap();
+        String idParam = params.get("id");
+        
+        if (idParam != null && !idParam.isEmpty()) {
+            paciente = service.buscarPacientePorId(Long.valueOf(idParam));
+        } else {
+            paciente = new Paciente();
+        }
+        
 		lazyModel = new LazyDataModel<Paciente>() {
 			private static final long serialVersionUID = -4752676587689841891L;
 
@@ -49,8 +66,7 @@ public class PacienteBean implements Serializable {
 	}
 
 	public String editar(Paciente p) {
-		paciente = p;
-		return "pacienteForm.xhtml?faces-redirect=true";
+		return "pacienteForm.xhtml?faces-redirect=true&id=" + p.getId();
 	}
 
 	@Transactional

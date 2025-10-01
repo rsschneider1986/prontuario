@@ -1,4 +1,4 @@
-package com.prontuario.controller;
+package com.prontuario.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -44,6 +44,17 @@ public class ReceitaBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
+		
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String idParam = params.get("id");
+
+		if (idParam != null && !idParam.isEmpty()) {
+			receita = service.buscarReceitaById(Long.valueOf(idParam));
+			this.medicamentosSelected = new ArrayList<>();
+			for (var mr : receita.getMedicamentos())
+				medicamentosSelected.add(mr.getMedicamento());
+			this.pacienteSelected = receita.getPaciente();
+		}		
 		lazyModel = new LazyDataModel<Receita>() {
 
 			private static final long serialVersionUID = -6772550719175433200L;
@@ -73,12 +84,7 @@ public class ReceitaBean implements Serializable {
 	}
 
 	public String editar(Receita r) {
-		this.receita = r;
-		this.medicamentosSelected = new ArrayList<>();
-		for (var mr : r.getMedicamentos())
-			medicamentosSelected.add(mr.getMedicamento());
-		this.pacienteSelected = r.getPaciente();
-		return "receitaForm.xhtml?faces-redirect=true";
+		return "receitaForm.xhtml?faces-redirect=true&id=" + r.getId();
 	}
 
 	@Transactional
