@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://primefaces.org/ui">
+<h:head><title>Medicamentos</title></h:head>
+<h:body>
+  <h:form id="formMed">
+    <p:panel header="Pesquisar Medicamentos">
+      <p:inputText value="#{medicamentoBean.termo}" style="width:300px"/>
+      <p:commandButton value="Buscar" process="@this" update="tblMed"/>
+      <p:commandButton value="Novo" action="#{medicamentoBean.novo}" icon="pi pi-plus"/>
+    </p:panel>
+    <p:dataTable id="tblMed" var="m" value="#{medicamentoBean.lazyModel}" paginator="true" rows="10" lazy="true">
+      <p:column headerText="ID"><h:outputText value="#{m.id}"/></p:column>
+      <p:column headerText="Nome"><h:outputText value="#{m.nome}"/></p:column>
+      <p:column headerText="Ações">
+        <p:commandButton value="Editar" action="#{medicamentoBean.editar(m)}" icon="pi pi-pencil"/>
+        <p:commandButton value="Excluir" action="#{medicamentoBean.excluir(m)}" icon="pi pi-trash" update="tblMed" onclick="return confirm('Excluir medicamento?');"/>
+      </p:column>
+    </p:dataTable>
+  </h:form>
+</h:body>
+</html>

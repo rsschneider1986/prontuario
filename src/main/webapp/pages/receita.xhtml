@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://primefaces.org/ui">
+<h:head><title>Receitas</title></h:head>
+<h:body>
+  <h:form id="formRec">
+    <p:panel header="Pesquisar Receitas">
+      <p:inputText value="#{receitaBean.pacienteTermo}" placeholder="Paciente" style="width:200px"/>
+      <p:inputText value="#{receitaBean.medicamentoTermo}" placeholder="Medicamento" style="width:200px"/>
+      <p:commandButton value="Buscar" process="@form" update="tblRec"/>
+      <p:commandButton value="Novo" action="#{receitaBean.novo}" icon="pi pi-plus"/>
+    </p:panel>
+    <p:dataTable id="tblRec" var="r" value="#{receitaBean.lazyModel}" paginator="true" rows="10" lazy="true">
+      <p:column headerText="ID"><h:outputText value="#{r.id}"/></p:column>
+      <p:column headerText="Paciente"><h:outputText value="#{r.paciente.nome}"/></p:column>
+      <p:column headerText="#Medicamentos"><h:outputText value="#{r.medicamentos.size()}"/></p:column>
+      <p:column headerText="Ações">
+        <p:commandButton value="Editar" action="#{receitaBean.editar(r)}" icon="pi pi-pencil"/>
+        <p:commandButton value="Excluir" action="#{receitaBean.excluir(r)}" icon="pi pi-trash" update="tblRec" onclick="return confirm('Excluir receita?');"/>
+      </p:column>
+    </p:dataTable>
+  </h:form>
+</h:body>
+</html>
